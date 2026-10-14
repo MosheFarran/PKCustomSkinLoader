@@ -1,0 +1,10 @@
+# Visual Studio / build output
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# Local working copies and release zips (zips go to GitHub Releases)
+_backup*/
+Release/
