@@ -218,7 +218,7 @@ namespace PKSkinLoader
 
         /// <summary>Game-style slider: dark track, white fill, pill handle showing the value.</summary>
         public static Slider Slider(Transform parent, float min, float max, float value, string format,
-                                    Action<float> onDrag, Action<float> onRelease)
+                                    Action<float> onDrag, Action<float> onRelease, Func<float, string> labelFn = null)
         {
             var root = Rect("Slider", parent);
             Size(root, 30);
@@ -251,10 +251,11 @@ namespace PKSkinLoader
             s.minValue = min; s.maxValue = max;
             var nav = s.navigation; nav.mode = Navigation.Mode.None; s.navigation = nav;
             s.SetValueWithoutNotify(value);
-            label.text = value.ToString(format);
+            Func<float, string> show = v => { try { return labelFn != null ? labelFn(v) : v.ToString(format); } catch { return v.ToString(format); } };
+            label.text = show(value);
             s.onValueChanged.AddListener(v =>
             {
-                label.text = v.ToString(format);
+                label.text = show(v);
                 if (onDrag != null) onDrag(v);
             });
 

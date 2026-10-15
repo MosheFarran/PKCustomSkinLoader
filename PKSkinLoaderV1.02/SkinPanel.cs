@@ -806,6 +806,8 @@ namespace PKSkinLoader
             UI.Segmented(c, new[] { "Automatic", "Base skin", "Your diffuse" }, csel,
                 i => Saved(SkinFiles.SetSetting(src, "cutout", i == 0 ? null : new JValue(cmodes[i]))));
 
+            RenderSkinExtensions(c, e.Species, e.Slot);
+
             var gap = UI.Rect("Gap", c); UI.Size(gap, 6);
             UI.Para(c, "Settings are saved in " + (src.Legacy ? src.LegacyName + ".json" : "skin.json") + " and applied straight away.", 13, Theme.TextMuted);
         }
@@ -872,6 +874,8 @@ namespace PKSkinLoader
             LabeledSlider(c, "Front / back (Z)", -50f, 50f, d.z, "0.0", v => setDroop(2, v));
             if (t.Droop != null)
                 UI.Size(UI.Button(c, "Reset fur droop", Theme.Button, () => Saved(VanillaTweaks.Change(sp, skin, x => x.Droop = null)), 14), 32);
+
+            RenderSkinExtensions(c, sp, idx);
 
             var gap = UI.Rect("Gap", c); UI.Size(gap, 6);
             UI.Para(c, "Saved in UserData/PKSkinLoader/vanilla-tweaks.json. Saves and game files are not changed; remove the mod and these skins are vanilla again. To change textures, make a custom skin from it.", 13, Theme.TextMuted);
@@ -1056,9 +1060,39 @@ namespace PKSkinLoader
                     UI.Size(UI.Button(c, "Reset shimmer", Theme.Button, () => AnimalChanged(x => x.IridescenceStrength = null), 14), 32);
             }
 
+            // ---- sections added by other mods (PanelApi)
+            foreach (var ext in PanelApi.AnimalSections.ToArray())
+            {
+                try { ext.Build(new PanelBuilder(c), a); }
+                catch (Exception ex) { SkinModBase.ErrorOnce("ext-" + ext.Id, "[Panel] Section '" + ext.Id + "' failed: " + ex); }
+            }
+
             var gap = UI.Rect("Gap", c); UI.Size(gap, 6);
             UI.Para(c, "Kept with this park when you save. Its babies inherit a mix of both parents' looks.", 13, Theme.TextMuted);
         }
+
+        /// <summary>For PanelApi: redraw the Animal view if it is showing.</summary>
+        internal static void RedrawAnimal()
+        {
+            if (IsOpen && _mode == Mode.Animal) RenderAnimal();
+        }
+
+        /// <summary>For PanelApi: redraw the skin details if they are showing.</summary>
+        internal static void RedrawSkin()
+        {
+            if (IsOpen && _mode == Mode.Browse && _canvasGo != null) RenderDetails();
+        }
+
+        private static void RenderSkinExtensions(Transform c, BaseAnimalData sp, int idx)
+        {
+            foreach (var ext in PanelApi.SkinSections.ToArray())
+            {
+                try { ext.Build(new PanelBuilder(c), sp, idx); }
+                catch (Exception ex) { SkinModBase.ErrorOnce("ext-" + ext.Id, "[Panel] Section '" + ext.Id + "' failed: " + ex); }
+            }
+        }
+
+        internal static void ExtToast(string msg, Color c) { Toast(msg, c, 3.5f); }
 
         private static void BaseCard(Transform grid, Sprite sprite, string label, bool selected, Action click)
         {

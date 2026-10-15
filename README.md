@@ -1,4 +1,4 @@
-# PK Custom Skin Loader 4.0
+# PK Custom Skin Loader 4.1
 
 Custom skins for **Prehistoric Kingdom** — made in your favourite art program, edited live in game.
 By MosheFarran (Moshepit).
@@ -11,6 +11,7 @@ By MosheFarran (Moshepit).
 - **Vanilla skins** can get fur, droop and shimmer tweaks too (only in your game; game files stay untouched).
 - **Save-safe**: skins keep their slot forever, removed skins never break saves, and there's a safe uninstall option.
 - Live reload (F5), automatic texture compression, works alongside Tyrant.
+- **Works with other mods**: other mods can add their own sections to the F6 panel. For example, **Unclamped Skin Colors** 1.1+ (on Nexus Mods) adds live hue / saturation / value editing for any animal.
 
 ## Made with AI assistance
 In the spirit of transparency: this mod was made with the help of AI. The earlier versions were built by MosheFarran
@@ -26,7 +27,10 @@ checked the code along the way, and tested everything in game.
 Download the zip from the Releases page (or Nexus).
 1. Copy the `Mods` folder from the zip into your game folder
    (`...\steamapps\common\Prehistoric Kingdom\`), so you get `Mods\PKCustomSkinLoader.dll` and `Mods\Skins\`.
-2. Start the game. The MelonLoader console shows `PK Custom Skin Loader 4.0.0` and `[Compat] All … hooks OK`.
+2. Start the game. The MelonLoader console shows `PK Custom Skin Loader 4.1.0` and `[Compat] All … hooks OK`.
+
+### Updating from 4.0
+Just replace `Mods\PKCustomSkinLoader.dll`. Nothing else changes; your skins, numbers and saves stay as they are.
 
 ### Updating from an older version (v3 / test builds)
 - **Install v4 before you remove or rename any skins** — v4 takes over your existing skin numbers so saves keep working.
@@ -82,7 +86,15 @@ The mod is a MelonLoader mod (C#, .NET Framework 4.8 project, MelonLoader's net3
 | `Patches.cs` | Harmony hooks into the game |
 | `NurseryUI.cs` | Nursery skin cards and preview |
 | `SkinPanel*.cs` | The F6 panel, vanilla tweaks, individual animals and inheritance |
+| `PanelApi.cs` | Lets other mods add sections to the F6 panel (see below) |
 | `SkinDumper.cs` | F8 report and F9 template export |
+
+### Adding your own section to the F6 panel (for other mod makers)
+`PKSkinLoader.PanelApi.AddAnimalSection(id, (builder, animal) => { ... })` adds a section to Animal mode for the selected
+park animal; `AddSkinSection` adds one under a skin's settings. The `PanelBuilder` you get has `Section`, `Text`,
+`Slider`, `Button`, `Buttons`, `Choice`, `Row` and `RowButton`, all in the panel's own style. Keep the skin loader an
+optional dependency (`[assembly: MelonOptionalDependencies("PKCustomSkinLoader")]`) and only call the API from a method
+that runs when it's installed. Unclamped Skin Colors is a working example.
 
 The mod only reads and writes files inside the game folder (`Mods/Skins`, `UserData`) and the park's save folder
 (`PKSkinLoader-animals.json`). It makes no network connections.

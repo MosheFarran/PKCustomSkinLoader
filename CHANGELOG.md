@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.0
+- **Works with other mods**: other mods can now add their own sections to the skin panel (F6), in the panel's own style.
+  First one: **Unclamped Skin Colors 1.1** adds a Colour section to Animal mode - change any animal's hue, saturation
+  and value live, with per-skin limits.
+- For mod makers: `PKSkinLoader.PanelApi` (animal and skin sections, sliders with custom labels, small row buttons,
+  redraw, toasts, refreshing an animal). See README.
+- Nothing else changed: skins, slot numbers and saves work exactly as in 4.0. Just replace the DLL.
+
 ## 4.0.0
 A full rewrite of the skin loader, made with the help of AI (Claude by Anthropic; earlier versions with Gemini) - see README.
 

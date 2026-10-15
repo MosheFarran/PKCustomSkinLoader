@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(PKSkinLoader.SkinModBase), "PK Custom Skin Loader", "4.0.0", "Moshepit / MosheFarran")]
+[assembly: MelonInfo(typeof(PKSkinLoader.SkinModBase), "PK Custom Skin Loader", "4.1.0", "Moshepit / MosheFarran")]
 [assembly: MelonGame(null, null)]
 [assembly: HarmonyDontPatchAll]   // hooks are applied one by one in Compat.ApplyPatches (survives game updates)
 
